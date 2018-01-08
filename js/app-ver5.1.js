@@ -45,14 +45,12 @@
     //WikiPedia
     var wikiTimeOut = setTimeout(function (){console.log('Wikipedia no response');},3000);
     $.ajax({
-      // https://en.wikipedia.org/w/api.php?action=query&list=search&srnamespace=0&srprop=timestamp&&srsearch=intitle:Minsk%20National%20Opera%20and%20Ballet
-        // url: "https://en.wikipedia.org/w/api.php?action=opensearch&prop=images&&format=json&search="+"Minsk",
-        url: "https://en.wikipedia.org/w/api.php?action=query&prop=images&format=json&titles="+"Minsk",
+        url: "https://en.wikipedia.org/w/api.php?action=opensearch&search="+"Minsk National Opera and Ballet"+"&prop=revisions&rvprop=content&format=json",
         contentType: "application/json; charset=utf-8",
         async: false,
         dataType: "jsonp",
         success: function (data, textStatus, jqXHR) {
-          console.log("1"+JSON.stringify(data));
+          console.log("1"+data);
             var articleList = data[1];
             console.log("2"+data[1]);
                 articleStr = articleList[0];

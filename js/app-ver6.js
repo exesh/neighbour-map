@@ -1,6 +1,7 @@
       var map;
       // Create a new blank array for all the listing markers.
       var markers = [];
+      var articleInfowindow = [];
 
       function initMap() {
         // Create a styles array to use with the map.
@@ -28,12 +29,12 @@
 
         //My locations list
         var locations = [
-          {title: 'Minsk National Library', location: {lat: 53.93133676, lng: 27.64605784}},
-          {title: 'Minsk-Arena', location: {lat: 53.93618766, lng: 27.4820354}},
-          {title: 'Minsk Gorky Park', location: {lat: 53.9030228, lng: 27.5696354}},
-          {title: 'Minsk Trinity Hill', location: {lat: 53.90797125, lng: 27.55565667}},
-          {title: 'Minsk Holy Spirit Cathedral', location: {lat: 53.90352477, lng: 27.55612338}},
-          {title: 'Minsk National Opera and Ballet', location: {lat: 53.91061301, lng: 27.56167555}}
+          {title: 'Minsk National Library', wikisearch: 'Minsk Library', location: {lat: 53.93133676, lng: 27.64605784}},
+          {title: 'Minsk-Arena', wikisearch: 'Minsk Arena',location: {lat: 53.93618766, lng: 27.4820354}},
+          {title: 'Minsk Gorky Park', wikisearch: 'Minsk Park',location: {lat: 53.9030228, lng: 27.5696354}},
+          {title: 'Minsk Trinity Hill', wikisearch: 'Minsk seightseeng',location: {lat: 53.90797125, lng: 27.55565667}},
+          {title: 'Minsk Holy Spirit Cathedral', wikisearch: 'Minsk spirit',location: {lat: 53.90352477, lng: 27.55612338}},
+          {title: 'Minsk National Opera and Ballet', wikisearch: 'Minsk opera', location: {lat: 53.91061301, lng: 27.56167555}}
         ];
 
         var infowindow = new google.maps.InfoWindow();
@@ -45,21 +46,17 @@
     //WikiPedia
     var wikiTimeOut = setTimeout(function (){console.log('Wikipedia no response');},3000);
     $.ajax({
-      // https://en.wikipedia.org/w/api.php?action=query&list=search&srnamespace=0&srprop=timestamp&&srsearch=intitle:Minsk%20National%20Opera%20and%20Ballet
-        // url: "https://en.wikipedia.org/w/api.php?action=opensearch&prop=images&&format=json&search="+"Minsk",
-        url: "https://en.wikipedia.org/w/api.php?action=query&prop=images&format=json&titles="+"Minsk",
+        url: "https://en.wikipedia.org/w/api.php?action=opensearch&search="+"Minsk"+"&prop=revisions&rvprop=content&format=json",
         contentType: "application/json; charset=utf-8",
         async: false,
         dataType: "jsonp",
         success: function (data, textStatus, jqXHR) {
-          console.log("1"+JSON.stringify(data));
             var articleList = data[1];
-            console.log("2"+data[1]);
-                articleStr = articleList[0];
-                console.log("3"+articleList[0]);
+            for (var i = 0; i<articleList.length; i++) {
+                articleStr = articleList[i];
                 var wikiUrl = 'https://en.wikipedia.org/wiki/' +articleStr;
-                console.log("4"+wikiUrl);
-                console.log('<li><a href="'+wikiUrl+ '">'+articleStr+'</a></li>')
+                articleInfowindow.push('<li><a href="'+wikiUrl+ '" target="_blank">'+articleStr+'</a></li>');
+              }
             clearTimeout(wikiTimeOut);
         },
         error: function (errorMessage) {
@@ -89,7 +86,7 @@
           this.setAnimation(google.maps.Animation.BOUNCE);
           setTimeout(function () {
             self.setAnimation(null);
-          }, 2140);
+          }, 2100);
           });
           // Two event listeners - one for mouseover, one for mouseout,
           // to change the colors back and forth.
@@ -108,7 +105,12 @@
       function populateInfoWindow(marker, infowindow) {
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
-          infowindow.setContent('<div>' + marker.title + '</div>');
+          var content = '<div>' + marker.title + '</div>'+'<br>'+'More about Minsk on Wiki:';
+          // infowindow.setContent('<div>' + marker.title + '</div>');
+          for (var i = 0; i < articleInfowindow.length && i<5; i++) {
+          content = content + articleInfowindow[i];
+          }
+          infowindow.setContent(content);
           infowindow.open(map, marker);
         }
       }

@@ -21,50 +21,25 @@
         // Constructor creates a new map
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 53.9045398, lng: 27.5615244},
-          zoom: 12,
+          zoom: 13,
           styles: styles,
           mapTypeControl: false
         });
 
         //My locations list
         var locations = [
-          {title: 'Minsk National Library', location: {lat: 53.93133676, lng: 27.64605784}},
+          {title: 'National Library', location: {lat: 53.93133676, lng: 27.64605784}},
           {title: 'Minsk-Arena', location: {lat: 53.93618766, lng: 27.4820354}},
-          {title: 'Minsk Gorky Park', location: {lat: 53.9030228, lng: 27.5696354}},
-          {title: 'Minsk Trinity Hill', location: {lat: 53.90797125, lng: 27.55565667}},
-          {title: 'Minsk Holy Spirit Cathedral', location: {lat: 53.90352477, lng: 27.55612338}},
-          {title: 'Minsk National Opera and Ballet', location: {lat: 53.91061301, lng: 27.56167555}}
+          {title: 'Gorky Park', location: {lat: 53.9030228, lng: 27.5696354}},
+          {title: 'Trinity Hill', location: {lat: 53.90797125, lng: 27.55565667}},
+          {title: 'Holy Spirit Cathedral', location: {lat: 53.90352477, lng: 27.55612338}},
+          {title: 'National Opera and Ballet', location: {lat: 53.91061301, lng: 27.56167555}}
         ];
 
         var infowindow = new google.maps.InfoWindow();
 
         var defaultIcon = makeMarkerIcon('D91E29');
         var highlightedIcon = makeMarkerIcon('FEEC01');
-
-
-    //WikiPedia
-    var wikiTimeOut = setTimeout(function (){console.log('Wikipedia no response');},3000);
-    $.ajax({
-      // https://en.wikipedia.org/w/api.php?action=query&list=search&srnamespace=0&srprop=timestamp&&srsearch=intitle:Minsk%20National%20Opera%20and%20Ballet
-        // url: "https://en.wikipedia.org/w/api.php?action=opensearch&prop=images&&format=json&search="+"Minsk",
-        url: "https://en.wikipedia.org/w/api.php?action=query&prop=images&format=json&titles="+"Minsk",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "jsonp",
-        success: function (data, textStatus, jqXHR) {
-          console.log("1"+JSON.stringify(data));
-            var articleList = data[1];
-            console.log("2"+data[1]);
-                articleStr = articleList[0];
-                console.log("3"+articleList[0]);
-                var wikiUrl = 'https://en.wikipedia.org/wiki/' +articleStr;
-                console.log("4"+wikiUrl);
-                console.log('<li><a href="'+wikiUrl+ '">'+articleStr+'</a></li>')
-            clearTimeout(wikiTimeOut);
-        },
-        error: function (errorMessage) {
-        }
-    });
 
         //Creating markers
         for (var i = 0; i < locations.length; i++) {
@@ -158,3 +133,20 @@ function ListViewModel() {
     };
 }
 
+
+
+    var $wikiElem;
+    var locationName = 'Национальная библиотека';
+    var wikiTimeOut = setTimeout(function (){$wikiElem.text('No response');},3000);
+    $.ajax({
+        url: '//en.wikipedia.org/w/api.php',
+        data: { action: 'query', list: 'search', srsearch: locationName, format: 'json' },
+        dataType: 'jsonp',
+        success: function(data) {
+          var wikiTitle = data.query.search[0].title;
+          var wikiUrl = 'https://en.wikipedia.org/wiki/' +wikiTitle;
+          console.log('<li><a href="'+wikiUrl+ '">'+wikiTitle+'</a></li>');
+          clearTimeout(wikiTimeOut);
+        },
+        error: function(errorMessage) {}
+    });
