@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
-    <link rel="stylesheet" type="text/css" href="js/lib/styles.css">
+    <link rel="stylesheet" type="text/css" href="lib/styles.css">
 </head>
 <body>
     <nav id="drawer">
@@ -26,24 +26,8 @@
             </svg>
         </a>
     </div>
-    <!-- Resopnsive menu toggle script for mobile devices -->
-    <script>
-    var menu = document.querySelector('#menu');
-    var main = document.querySelector('main');
-    var drawer = document.querySelector('#drawer');
-    };
-    menu.addEventListener('click', function(e) {
-        drawer.classList.toggle('open');
-        menu.style.display = "none"
-        e.stopPropagation();
-    });
-    main.addEventListener('click', function() {
-        menu.style.display = "block"
-        drawer.classList.remove('open');
-    });
-    </script>
-    <script src="js/lib/jquery.min.js"></script>
-    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/knockout-3.2.0.js"></script>
     <script src="js/app-ver6.js"></script>
     <script onerror="alert('Google map occured error. Please, check your internt connection!')" async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDh9MgEZHHSN8gkdn_WqbVfFH2Nv_IfKJw&v=3&callback=initMap"></script>
 </body>

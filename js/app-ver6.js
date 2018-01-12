@@ -1,3 +1,18 @@
+    // Resopnsive menu toggle script for mobile devices
+    var menu = document.querySelector('#menu');
+    var main = document.querySelector('main');
+    var drawer = document.querySelector('#drawer');
+    menu.addEventListener('click', function(e) {
+        drawer.classList.toggle('open');
+        menu.style.display = "none"
+        e.stopPropagation();
+    });
+    main.addEventListener('click', function() {
+        menu.style.display = "block"
+        drawer.classList.remove('open');
+    });
+
+      // Creating the map
       var map;
       // Create a new blank array for all the listing markers.
       var markers = [];
@@ -147,11 +162,12 @@ function ListViewModel() {
             markers[i].setMap(null);
         };
         obj.currentMap().setMap(map);
+        obj.currentMap().setAnimation(google.maps.Animation.BOUNCE);
     };
 
     //This function takes the object (maybe) from selected drop-down list by user
     //and makes visible only selected marker
-    self.mapSelected = function(obj) {
+    this.mapSelected = function(obj) {
         for (var i = 0; i < self.mapList().length; i++) {
             markers[i].setMap(null);
         };
