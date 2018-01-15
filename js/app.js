@@ -73,10 +73,10 @@ function initMap() {
     });
 
     //Creating markers
-    for (var i = 0; i < locations.length; i++) {
+    locations.forEach(function(loc){
         // Get the position from the location array.
-        var position = locations[i].location;
-        var title = locations[i].title;
+        var position = loc.location;
+        var title = loc.title;
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
             position: position,
@@ -105,7 +105,7 @@ function initMap() {
         marker.addListener('mouseout', function() {
             this.setIcon(defaultIcon);
         });
-    }
+    });
 
     ko.applyBindings(new ListViewModel());
 }
