@@ -4,11 +4,11 @@ var main = document.querySelector('main');
 var drawer = document.querySelector('#drawer');
 menu.addEventListener('click', function(e) {
     drawer.classList.toggle('open');
-    menu.style.display = "none"
+    menu.style.display = "none";
     e.stopPropagation();
 });
 main.addEventListener('click', function() {
-    menu.style.display = "block"
+    menu.style.display = "block";
     drawer.classList.remove('open');
 });
 
@@ -142,7 +142,7 @@ var Mapdata = function(data) {
     this.title = ko.observable(data.title);
     this.position = ko.observable(data.position);
     data.setMap(map);
-}
+};
 
 //ViewModel
 function ListViewModel() {
@@ -150,7 +150,7 @@ function ListViewModel() {
     this.mapList = ko.observableArray([]);
     for (var i = 0; i < markers.length; i++) {
         self.mapList.push(new Mapdata(markers[i]));
-    };
+    }
     this.mapChoice = function(obj) {
         obj.currentMap().setMap(map);
         map.panTo(obj.position());
@@ -165,7 +165,7 @@ function ListViewModel() {
     this.mapSelected = function(obj) {
         for (var i = 0; i < self.mapList().length; i++) {
             markers[i].setMap(null);
-        };
+        }
         obj.currentMap().setMap(map);
         map.panTo(obj.position());
     };
