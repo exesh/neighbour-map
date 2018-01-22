@@ -75,7 +75,7 @@ function initMap() {
                 articleStr = articleList[j].title;
                 var wikiUrl = 'https://en.wikipedia.org/wiki/' + articleStr;
                 articleListReady.push('<li><a href="' + wikiUrl + '" target="_blank">' + articleStr + '</a></li>');
-            };
+            }
             articleInfowindow.push({articleListReady});
             clearTimeout(wikiTimeOut);
         },
