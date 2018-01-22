@@ -53,7 +53,6 @@ function initMap() {
     var infowindow = new google.maps.InfoWindow();
     var defaultIcon = makeMarkerIcon('D91E29');
     var highlightedIcon = makeMarkerIcon('FEEC01');
-    var wikiTimeOut = setTimeout(function() { console.log('Wikipedia no response'); }, 3000);
 
     //Creating markers
     locations.forEach(function(loc){
@@ -64,11 +63,9 @@ function initMap() {
 
         //WikiPedia API data
         $.ajax({
-        url: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+loc.wikisearch+"&format=json",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "jsonp",
-        success: function(data, textStatus, jqXHR) {
+            url: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+loc.wikisearch+"&format=json",
+            dataType: "jsonp",
+        }).done(function( data ) {
             articleListReady = [];
             var articleList = data.query.search;
             for (var j = 0; j < articleList.length && j<5; j++) {
@@ -77,13 +74,9 @@ function initMap() {
                 articleListReady.push('<li><a href="' + wikiUrl + '" target="_blank">' + articleStr + '</a></li>');
             }
             articleInfowindow.push({articleListReady});
-            clearTimeout(wikiTimeOut);
-        },
-        error: function(errorMessage) {
-            alert ("WikiPedia error:"+errorMessage);
-        }
-    });
-
+        }).fail(function( xhr, status, errorThrown ) {
+            alert ("WikiPedia error:"+status);
+        });
 
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
@@ -165,14 +158,24 @@ function ListViewModel() {
     //Creating filter which takes mapList (list of markers) and filters it every time
     //user types in input field. Function returns new array to the UI
     self.mapListFiltered = ko.computed(function() {
+        self.mapList().forEach(function(element) {
+            element.currentMap().setVisible(false);
+        });
         var filter = self.filter();
         //This returns all markers in case the filter filed is empty
         if (!filter) {
+            self.mapList().forEach(function(element) {
+                element.currentMap().setVisible(true);
+            });
             return self.mapList();
         }
-        return self.mapList().filter(function(element) {
+        var readyMapList = self.mapList().filter(function(element) {
             return element.title().toLowerCase().indexOf(filter.toLowerCase()) > -1;
         });
+        readyMapList.forEach(function(element) {
+            element.currentMap().setVisible(true);
+        });
+        return readyMapList;
     });
     //This function handles with clicks on the observableArray mapList (list of markers)
     this.mapChoice = function(obj) {
