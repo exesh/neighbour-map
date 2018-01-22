@@ -4,11 +4,11 @@ var main = document.querySelector('main');
 var drawer = document.querySelector('#drawer');
 menu.addEventListener('click', function(e) {
     drawer.classList.toggle('open');
-    menu.style.display = "none"
+    menu.style.display = "none";
     e.stopPropagation();
 });
 main.addEventListener('click', function() {
-    menu.style.display = "block"
+    menu.style.display = "block";
     drawer.classList.remove('open');
 });
 
@@ -53,18 +53,18 @@ function initMap() {
     var infowindow = new google.maps.InfoWindow();
     var defaultIcon = makeMarkerIcon('D91E29');
     var highlightedIcon = makeMarkerIcon('FEEC01');
+    var wikiTimeOut = setTimeout(function() { console.log('Wikipedia no response'); }, 3000);
 
     //Creating markers
-    for (var i = 0; i < locations.length; i++) {
+    locations.forEach(function(loc){
         // Get the position from the location array.
-        var position = locations[i].location;
-        var title = locations[i].title;
-        var num = locations[i].num;
+        var position = loc.location;
+        var title = loc.title;
+        var num = loc.num;
 
         //WikiPedia API data
-        var wikiTimeOut = setTimeout(function() { console.log('Wikipedia no response'); }, 3000);
         $.ajax({
-        url: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+locations[i].wikisearch+"&format=json",
+        url: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+loc.wikisearch+"&format=json",
         contentType: "application/json; charset=utf-8",
         async: false,
         dataType: "jsonp",
@@ -114,7 +114,7 @@ function initMap() {
         marker.addListener('mouseout', function() {
             this.setIcon(defaultIcon);
         });
-    }
+    });
 
     ko.applyBindings(new ListViewModel());
 }
@@ -151,7 +151,7 @@ var Mapdata = function(data) {
     this.position = ko.observable(data.position);
     this.num = ko.observable(data.num);
     data.setMap(map);
-}
+};
 
 //ViewModel
 function ListViewModel() {
@@ -161,7 +161,7 @@ function ListViewModel() {
     self.mapList = ko.observableArray([]);
     for (var i = 0; i < markers.length; i++) {
         self.mapList.push(new Mapdata(markers[i]));
-    };
+    }
     //Creating filter which takes mapList (list of markers) and filters it every time
     //user types in input field. Function returns new array to the UI
     self.mapListFiltered = ko.computed(function() {
